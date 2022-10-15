@@ -1,53 +1,27 @@
-import React, {useState} from 'react'
-import { StatusBar } from 'expo-status-bar';
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Login from './components/Login'
+import Dashboard from './components/Dashboard'
 import { Button, StyleSheet, Text, TextInput, View, Alert } from 'react-native';
 
+
+const Stack = createNativeStackNavigator();
 export default function App() {
-  const [name, setName]= useState('initialState')
-  const [password, setPassword]= useState('initialState')
-  const [token, setToken] = useState('');
-  const [user, setUser]= useState({})
 
-  const Singup = async () => {
-    try {
-     const response = await fetch('http://localhost:8000/api/signin');
-     const json = await response.json();
-     setToken(json.token);
-     setUser(json.user)
-   } catch (error) {
-     console.error(error);
-   } 
- }
-  
-  return (
-    <View style={styles.container}>
-      <Text>Enter Email:</Text>
+return(
+  <NavigationContainer>
+  <Stack.Navigator>
+    <Stack.Screen
+      name="Login"
+      component={Login}
+      options={{ title: 'Welcome' }}
+    />
+    <Stack.Screen name="Dashboard" component={Dashboard} />
+  </Stack.Navigator>
+</NavigationContainer>
+)
 
-      <TextInput 
-      style={styles.input}
-      placeholder='e.g. someone@something.com '
-      onChange={(val)=>setName(val)}/>
-      <StatusBar style="auto" />
-
-      <Text>Enter Password:</Text>
-
-      <TextInput 
-        style={styles.input}
-        placeholder='password'
-        secureTextEntry={true}
-        onChange={(val)=>setPassword(val)}/>
-       
-
-       <View style={styles.separator} />
-
-       <Button
-       title="Submit"
-       onPress={() => Singup()}
-       />
-
-
-    </View>
-  );
 }
 
 const styles = StyleSheet.create({
