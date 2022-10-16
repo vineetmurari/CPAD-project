@@ -1,7 +1,8 @@
 import React, {useState} from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { Button, StyleSheet, Text, TextInput, View, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+//import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Storage } from 'expo-storage'
 
 export default function Login({navigation}) {
   const [name, setName]= useState('initialState')
@@ -9,18 +10,24 @@ export default function Login({navigation}) {
   const [token, setToken] = useState('');
   const [user, setUser]= useState({})
 
+
   const storeToken = async (value) => {
     try {
-      await AsyncStorage.setItem('token', value)
+      await Storage.setItem({key: 'token', value:value})
     } catch (e) {
       console.log(e)
     }
   }
 
+  const getkeys = async()=>{
+    const keys = await Storage.getAllKeys()
+    console.log(keys)
+  }
+
   const storeData = async (value) => {
     try {
       const jsonValue = JSON.stringify(value)
-      await AsyncStorage.setItem('user', jsonValue)
+      await Storage.setItem({key:'user', value: jsonValue})
     } catch (e) {
       console.log(e)
     }
@@ -42,8 +49,9 @@ export default function Login({navigation}) {
          if(data.token){
          setToken(data.token)
          setUser(data.user)
-         storeToken(token)
-         storeData(user)
+         storeToken(token).then(getkeys())
+         storeData(user).then(getkeys())
+         
          navigation.navigate('Dashboard')
          }
       }).catch(function(error) {
