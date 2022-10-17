@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './components/Login'
 import Dashboard from './components/Dashboard'
+import Cart from './components/Cart'
 import { Button, StyleSheet, Text, TextInput, View, Alert } from 'react-native';
 
 
@@ -18,6 +19,7 @@ return(
       options={{ title: 'Welcome' }}
     />
     <Stack.Screen name="Dashboard" component={Dashboard} />
+    <Stack.Screen name="Cart" component={Cart} />
   </Stack.Navigator>
 </NavigationContainer>
 )

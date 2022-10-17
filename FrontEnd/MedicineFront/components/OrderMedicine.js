@@ -14,20 +14,24 @@ export default class  OrderMedicine extends React.Component{
           data : null,
           searchtext: '',
           orders : null,
-          status : "no"
+          status : "no",
+          cart : 0
         };
 
         this.searchHandle = this.searchHandle.bind(this);
         this.search = this.search.bind(this);
         this.getorders = this.getorders.bind(this)
         this.renderMyData = this.renderMyData.bind(this)
+        this.addtocart = this.addtocart.bind(this)
+        this.getcartitems = this.getcartitems.bind(this)
       }
       
       componentDidMount() {
         Promise.all([
             this.renderMyData(),
             this.getorders(),
-          ]).then(([res1, res2]) => {
+            this.getcartitems()
+          ]).then(([res1, res2, res3]) => {
             this.setState({status: "fetched"})
             console.log(this.state.status)
           })
@@ -43,6 +47,30 @@ export default class  OrderMedicine extends React.Component{
 
     }
     
+    addtocart=(email, item_name, qty, price, orderd)=>{
+        const params = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json',
+            'Authorization': 'Basic '+this.props.data.token,
+            'Cache-Control': 'no-cache'
+             },
+            body: JSON.stringify({
+              'email': email,
+              'item_name': item_name,
+              'qty': qty,
+              'price': price,
+              'orderd': orderd
+          }),
+          };
+          fetch('http://192.168.1.8:8000/api/addtocart', params)
+            .then(response => response.json())
+            .then(data => {
+              this.setState({ cart: this.state.cart + 1 })
+            }).catch(function(error) {
+              console.log('There has been a problem with your fetch operation: ' + error.message);
+              });
+    }
+
     search(){
        let dataarr= this.state.data.filter((value)=>{
             let arr = new Array()
@@ -54,6 +82,27 @@ export default class  OrderMedicine extends React.Component{
         this.setState({data: dataarr})
     }
 
+    getcartitems(){
+        const params = {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json',
+           'Authorization': 'Basic '+this.props.data.token,
+           'Cache-Control': 'no-cache'
+            },
+         };
+
+         fetch('http://192.168.1.8:8000/api/cartitems/'+this.props.data.email, params)
+         .then(response => response.json())
+          .then(data => { 
+              this.setState({ cart :data.length })
+              console.log("HRE>>>>> "+this.state.cart)         
+             }).catch(function(error) {
+              console.log('There has been a problem with your fetch operation: ' + error.message);
+              }); 
+    }
+
+
+
 
     getorders(){
         const params = {
@@ -64,7 +113,7 @@ export default class  OrderMedicine extends React.Component{
             },
          };
 
-
+         
 
          fetch('http://192.168.1.8:8000/api/getorder/'+this.props.data.email, params)
          .then(response => response.json())
@@ -111,11 +160,16 @@ export default class  OrderMedicine extends React.Component{
         if(this.state.data.length!=0 && this.state.status === 'fetched'){
             return(
                 <React.Fragment>
-
-            <TextInput 
+            <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+                 <Button style ={styles.cart}
+                        title={"Cart  -  "+(this.state.cart)}
+                        onPress={()=> {this.props.navigation.navigate('Cart') }}
+                         /> 
+                </View>
+                <TextInput 
                     style={styles.input}
                     placeholder='Search Medicine name'
-                    onChangeText ={(val)=>{this.searchHandle(val)}}/>
+                    onChangeText ={(val)=>{this.searchHandle(val)}}/> 
 
                     <Button
                         title="Submit"
@@ -181,22 +235,12 @@ export default class  OrderMedicine extends React.Component{
                          <CardContent text={'$'+price} />
                          <CardAction 
                          separator={true} 
-                         inColumn={false}>
+                         inColumn={true}>
                         <CardButton
-                         onPress={() => {}}
+                         onPress={() => { this.addtocart(this.props.data.email,medicine,"1", price, false )}}
                           title="Add to Cart"
                          color="#FEB557"
                             />
-                        <CardButton
-                         onPress={() => {}}
-                        title="+"
-                         color="#FEB557"
-                         />
-                         <CardButton
-                         onPress={() => {}}
-                        title="-"
-                         color="#FEB557"
-                         />
                     </CardAction>
                     </Card>         
                 );
@@ -229,7 +273,14 @@ const styles = StyleSheet.create({
       backgroundColor: 'pink',
       marginHorizontal: 20,
     },
+    fixToText: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      },
     text: {
       fontSize: 42,
     },
+    cart:{
+        height: 20
+    }
   });
