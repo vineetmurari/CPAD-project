@@ -4,6 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import DashboardView from './DashboardView'
 import Doctor  from './Doctor';
 import Lab from './Lab';
+import OrderMedicine from './OrderMedicine';
 
 
 const Drawer = createDrawerNavigator();
@@ -20,12 +21,16 @@ export default function Dashboard({route, navigation}){
           <DashboardView data ={dataobj} {...props} />
       );
 
+    const Order = props =>(
+      <OrderMedicine data = {dataobj} {...props}/>
+    )  
+
     return(
         <Drawer.Navigator useLegacyImplementation initialRouteName="Dashboard View">
           <Drawer.Screen name="Dashboard View" component={Transactions} />  
           <Drawer.Screen name="Book doctor appointment" component={Doctor} />
           <Drawer.Screen name="Book Lab appointment" component={Lab} />
-          <Drawer.Screen name="Order Medicines" component={Lab} />
+          <Drawer.Screen name="Order Medicines" component={Order} />
         </Drawer.Navigator>
       
     )
