@@ -1,0 +1,30 @@
+{
+                    this.state.orders!==null?(<React.Fragment>
+
+        {this.state.orders.map(({__v, _id, email, items, orderid, payment}) => {
+
+            return (
+
+                <React.Fragment key={_id}>
+
+                <Text key={_id}>
+
+                    Transaction : {orderid} {"\n"}
+                     payment : {payment? "Done": "pending"}    
+                        {"\n"}
+                    </Text>
+
+                    <Button
+                        title="Refil"
+                        onPress={()=> {this.refilHandler()} }
+                         />  
+
+                    </React.Fragment>
+
+  );})} </React.Fragment>): (<View>
+
+<Text>
+    No Transactions Found
+</Text>
+  </View>)
+                }

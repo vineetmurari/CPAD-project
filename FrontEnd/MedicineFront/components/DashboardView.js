@@ -18,7 +18,7 @@ export default class  DashboardView extends React.Component{
     }
             
       renderMyData(){
-        console.log("RENDER")
+        console.log("RENDER - Dashboard")
         console.log(this.props.data)
         
         const params = {
