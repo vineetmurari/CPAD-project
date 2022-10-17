@@ -16,12 +16,13 @@ export default function Dashboard({route, navigation}){
   email: email
  }
 
- const DashViewprop = props => (
-  <DashboardView data ={dataobj} {...props} />
-);
+    const Transactions = props => (
+          <DashboardView data ={dataobj} {...props} />
+      );
+
     return(
         <Drawer.Navigator useLegacyImplementation initialRouteName="Dashboard View">
-          <Drawer.Screen name="Dashboard View" component={DashViewprop} />  
+          <Drawer.Screen name="Dashboard View" component={Transactions} />  
           <Drawer.Screen name="Book doctor appointment" component={Doctor} />
           <Drawer.Screen name="Book Lab appointment" component={Lab} />
           <Drawer.Screen name="Order Medicines" component={Lab} />

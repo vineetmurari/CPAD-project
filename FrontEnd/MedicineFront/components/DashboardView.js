@@ -50,17 +50,17 @@ export default class  DashboardView extends React.Component{
             {this.state.data.length!=0? <View>{
               
               
-              this.state.data.map(({__v, __id, email, items, orderid, payment}) => {
+              this.state.data.map(({__v, _id, email, items, orderid, payment}) => {
 
                 return (
 
-                  <View key={__id}>
+                  <View key={_id}>
 
-                    <Text key={__id}>
+                    <Text key={_id}>
 
                       Transaction : {orderid} {"\n"}
                       payment : {payment? "Done": "pending"}    
-
+                      {"\n"}
                     </Text>
 
                   </View>

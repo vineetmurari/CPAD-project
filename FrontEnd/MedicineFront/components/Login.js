@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { Button, StyleSheet, Text, TextInput, View, Alert } from 'react-native';
 //import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Storage } from 'expo-storage'
+//import { Storage } from 'expo-storage'
 
 export default function Login({navigation}) {
   const [name, setName]= useState('initialState')
@@ -11,27 +11,27 @@ export default function Login({navigation}) {
   const [user, setUser]= useState({})
 
 
-  const storeToken = async (value) => {
-    try {
-      await Storage.setItem({key: 'token', value:value})
-    } catch (e) {
-      console.log(e)
-    }
-  }
+  // const storeToken = async (value) => {
+  //   try {
+  //     await Storage.setItem({key: 'token', value:value})
+  //   } catch (e) {
+  //     console.log(e)
+  //   }
+  // }
 
-  const getkeys = async()=>{
-    const keys = await Storage.getAllKeys()
-    console.log(keys)
-  }
+  // const getkeys = async()=>{
+  //   const keys = await Storage.getAllKeys()
+  //   console.log(keys)
+  // }
 
-  const storeData = async (value) => {
-    try {
-      const jsonValue = JSON.stringify(value)
-      await Storage.setItem({key:'user', value: jsonValue})
-    } catch (e) {
-      console.log(e)
-    }
-  }
+  // const storeData = async (value) => {
+  //   try {
+  //     const jsonValue = JSON.stringify(value)
+  //     await Storage.setItem({key:'user', value: jsonValue})
+  //   } catch (e) {
+  //     console.log(e)
+  //   }
+  // }
 
   const Singup = async () => {
     const params = {
@@ -49,8 +49,8 @@ export default function Login({navigation}) {
          if(data.token){
          setToken(data.token)
          setUser(data.user)
-         storeToken(token).then(getkeys())
-         storeData(user).then(getkeys())
+        //  storeToken(token).then(getkeys())
+        //  storeData(user).then(getkeys())
          navigation.navigate('Dashboard', {
           token : data.token,
           email: data.user.email
@@ -59,9 +59,6 @@ export default function Login({navigation}) {
       }).catch(function(error) {
         console.log('There has been a problem with your fetch operation: ' + error.message);
         });
-
-        global.email= user.email
-        global.token = token 
  }
   
   return (
@@ -77,7 +74,7 @@ export default function Login({navigation}) {
       <TextInput 
       style={styles.input}
       placeholder='e.g. someone@something.com '
-      onChangeText ={(val)=>setName(val)}/>
+      onChangeText ={(val)=>setName(val.trim())}/>
       <StatusBar style="auto" />
 
       <Text>Enter Password:</Text>
@@ -86,7 +83,7 @@ export default function Login({navigation}) {
         style={styles.input}
         placeholder='password'
         secureTextEntry={true}
-        onChangeText ={(val)=>setPassword(val)}/>
+        onChangeText ={(val)=>setPassword(val.trim())}/>
        
 
        <View style={styles.separator} />
