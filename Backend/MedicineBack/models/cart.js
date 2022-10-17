@@ -2,27 +2,30 @@ const mongoose = require("mongoose");
 
 const cartSchema = new mongoose.Schema(
 {
-    item_id:{
+    email:{
         type: String,
         required: true,
         maxlength: 32,
         trim: true,
-        unique: true
+    },
+    item_name:{
+        type: String,
+        maxlength: 32,
+        trim: true
     },
     qty:{
         type: String,
-        required: true,
         maxlength: 32,
-        trim: true,
-        unique: true
+        trim: true
     },
 
     price:{
         type: String,
-        required: true,
         maxlength: 10,
         trim: true,
-        unique: true 
+    },
+    orderd:{
+        type: Boolean
     }
 }
 )
