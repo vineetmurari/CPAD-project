@@ -51,12 +51,17 @@ export default function Login({navigation}) {
          setUser(data.user)
          storeToken(token).then(getkeys())
          storeData(user).then(getkeys())
-         
-         navigation.navigate('Dashboard')
+         navigation.navigate('Dashboard', {
+          token : data.token,
+          email: data.user.email
+        })
          }
       }).catch(function(error) {
         console.log('There has been a problem with your fetch operation: ' + error.message);
         });
+
+        global.email= user.email
+        global.token = token 
  }
   
   return (
@@ -88,7 +93,9 @@ export default function Login({navigation}) {
 
        <Button
        title="Submit"
-       onPress={() => { Singup()}}
+       onPress={ async () => { 
+        await Singup()
+        }}
        />
 
 

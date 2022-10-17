@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, View , Text} from 'react-native';
 //import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Storage } from 'expo-storage'
+//import { Storage } from 'expo-storage'
 
 export default class  DashboardView extends React.Component{
   
@@ -9,48 +9,67 @@ export default class  DashboardView extends React.Component{
         super(props);
   
         this.state = {
-          data : null
+          data : null,
         };
       }
 
-      UNSAFE_componentWillMount() {
+      componentDidMount() {
         this.renderMyData();
     }
             
-      renderMyData= async()=>{
+      renderMyData(){
         console.log("RENDER")
-        const data = JSON.parse(await Storage.getItem({ key: 'user' }))
-        const token = await Storage.getItem({ key: 'token' })
-        console.log("data "+data)
-        console.log("token "+token)
-              
-
+        console.log(this.props.data)
+        
         const params = {
                      method: 'GET',
                      headers: {'Content-Type': 'application/json',
-                    'Authorization': 'Basic '+token,
+                    'Authorization': 'Basic '+this.props.data.token,
                     'Cache-Control': 'no-cache'
                      },
                   };
 
 
-                fetch('http://192.168.1.8:8000/api/getorder/'+data.email, params)
+                fetch('http://192.168.1.8:8000/api/getorder/'+this.props.data.email, params)
                         .then(response => response.json())
                          .then(data => {
                             console.log(data)
-                            if(data.length!==0)
-                             this.setState({ data : data })           
+                             this.setState({ data :data })           
                             }).catch(function(error) {
                              console.log('There has been a problem with your fetch operation: ' + error.message);
-                             });   
-            
+                             }); 
              
     }
         
     render(){
+      if (this.state.data===null) {
+        return (<Text>Loading...</Text>)
+    }
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            {this.state.data? <Text>{this.state.data.length}</Text> : <Text> No Transactions to show</Text>}
+            {this.state.data.length!=0? <View>{
+              
+              
+              this.state.data.map(({__v, __id, email, items, orderid, payment}) => {
+
+                return (
+
+                  <View key={__id}>
+
+                    <Text key={__id}>
+
+                      Transaction : {orderid} {"\n"}
+                      payment : {payment? "Done": "pending"}    
+
+                    </Text>
+
+                  </View>
+                
+                  );
+
+
+
+              })}</View> : <Text> No Transactions to show</Text>}
           </View>
          
         );
