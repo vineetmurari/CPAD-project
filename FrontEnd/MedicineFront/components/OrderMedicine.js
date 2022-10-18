@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, View , StyleSheet, Text, SafeAreaView, ScrollView, StatusBar,TextInput, Alert} from 'react-native';
+import { Button, View , StyleSheet, Text, SafeAreaView, ScrollView, StatusBar,TextInput,TouchableOpacity, Alert} from 'react-native';
 //import AsyncStorage from '@react-native-async-storage/async-storage';
 //import { Storage } from 'expo-storage'
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
@@ -222,6 +222,7 @@ export default class  OrderMedicine extends React.Component{
                     onChangeText ={(val)=>{this.searchHandle(val)}}/> 
 
                     <Button
+                    style={{width: 2}}
                         title="Submit"
                         onPress={()=> {this.search()} }
                          />   
@@ -238,12 +239,11 @@ export default class  OrderMedicine extends React.Component{
 
               return (
 
-                <React.Fragment key={_id}>
+                <View key={_id}>
 
-                <Text style={{padding: 10}} key={_id}>
-
-                    Transaction : {orderid} {"\n"}
-                     payment : {payment? "Done": "pending"}    
+                <Text  key={_id}>
+                   {'    '} Transaction : {orderid} - {items[0].item_id}  {"\n"}
+                   {'    '} payment : {payment? "Done": "pending"}    
                         {"\n"}
                     </Text>
 
@@ -252,7 +252,7 @@ export default class  OrderMedicine extends React.Component{
                         onPress={()=> {this.refilHandler(this.makeid(10),email,items )} }
                          />  
 
-                    </React.Fragment>
+                    </View>
 
               ) 
 
@@ -265,32 +265,42 @@ export default class  OrderMedicine extends React.Component{
                 </View>
 
                 <SafeAreaView style={styles.container}>
-                 <ScrollView style={styles.scrollView}>
+                 <ScrollView horizontal={false} style={styles.scrollView}>
 
 
                 {
                     this.state.data.map(
                         
                         (
-                            {_id, medicine, mid, prescription, price}
+                            {_id, medicine, mid, prescription, price, stock}
                         ) => {
 
                       return(      
-                        <Card key={_id}>
+                        <Card key={_id} >
                         
                         <CardTitle
                          title={medicine}
                         />
                          <CardContent text={ 'Doctor Prescription Needed : '+(prescription?"Yes":"No")} />
                          <CardContent text={'$'+price} />
+                         <CardContent text={'In stock '+(stock?"Yes":"No")} />
                          <CardAction 
-                         separator={true} 
-                         inColumn={true}>
-                        <CardButton
+                         separator={false} 
+                         inColumn={false}>
+                        {
+                          stock?(
+                            <CardButton
                          onPress={() => { this.addtocart(this.props.data.email,medicine,"1", price, false )}}
                           title="Add to Cart"
                          color="#FEB557"
                             />
+                          ): (<TouchableOpacity disabled={true}>
+                            <Text> 
+                                  Add to Cart - No stock
+                           </Text>
+                        </TouchableOpacity>)
+                        }  
+                        
                     </CardAction>
                     </Card>         
                 );
@@ -315,13 +325,14 @@ const styles = StyleSheet.create({
     input:{
         borderWidth: 1,
         borderColor: '#777',
-        padding: 8,
-        margin: 20,
-        width: 200
+        padding: 4,
+        width: 200,
+        marginLeft: 10,
+        marginBottom:5
       },
     scrollView: {
       backgroundColor: 'pink',
-      marginHorizontal: 20,
+      marginHorizontal: 20
     },
     fixToText: {
         flexDirection: 'row',
@@ -331,6 +342,6 @@ const styles = StyleSheet.create({
       fontSize: 42,
     },
     cart:{
-        height: 20
+        height: 1
     }
   });

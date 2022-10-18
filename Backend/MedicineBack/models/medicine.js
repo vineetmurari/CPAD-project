@@ -26,6 +26,9 @@ const mongoose = require("mongoose");
           maxlength: 10,
           trim: true,
           unique: true 
+        },
+        stock:{
+          type: Boolean
         }
 
     }
