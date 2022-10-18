@@ -32,5 +32,5 @@ exports.getorder = (req, res, next) => {
                 res.json(Order)
             }
             
-}).limit(3);
+}).limit(3).sort({_id: "descending"});
 }
