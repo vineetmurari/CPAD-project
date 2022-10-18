@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, View , StyleSheet, Text, SafeAreaView, ScrollView, StatusBar,TextInput} from 'react-native';
+import { Button, View , StyleSheet, Text, SafeAreaView, ScrollView, StatusBar,TextInput, Alert} from 'react-native';
 //import AsyncStorage from '@react-native-async-storage/async-storage';
 //import { Storage } from 'expo-storage'
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
@@ -15,7 +15,8 @@ export default class  OrderMedicine extends React.Component{
           searchtext: '',
           orders : null,
           status : "no",
-          cart : 0
+          cart : 0,
+          cartData : null 
         };
 
         this.searchHandle = this.searchHandle.bind(this);
@@ -24,6 +25,9 @@ export default class  OrderMedicine extends React.Component{
         this.renderMyData = this.renderMyData.bind(this)
         this.addtocart = this.addtocart.bind(this)
         this.getcartitems = this.getcartitems.bind(this)
+        this.refilHandler =this.refilHandler.bind(this)
+        this.placeOrder =this.placeOrder.bind(this)
+        this.makeid = this.makeid.bind(this)
       }
       
       componentDidMount() {
@@ -43,8 +47,47 @@ export default class  OrderMedicine extends React.Component{
        this.setState({searchtext: val})
     }
 
-    refilHandler(){
 
+    placeOrder(orderid, email, items){
+      const params = {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json',
+         'Authorization': 'Basic '+this.props.data.token,
+         'Cache-Control': 'no-cache'
+          },
+          body: JSON.stringify({
+              'orderid': orderid,
+              'email': email,
+              'items': items,
+              'payment': true
+          })
+       };
+
+       fetch('http://192.168.1.8:8000/api/createorder', params)
+       .then(response => response.json())
+        .then(data => { 
+                 if(data.length!=0){
+                  Alert.alert("Order refil sucess!")
+                 }    
+           }).catch(function(error) {
+            console.log('There has been a problem with your fetch operation: ' + error.message);
+            }); 
+
+  }
+
+  makeid(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
+
+    refilHandler(orderid, email, items){
+          this.placeOrder(orderid, email, items)
     }
     
     addtocart=(email, item_name, qty, price, orderd)=>{
@@ -94,8 +137,15 @@ export default class  OrderMedicine extends React.Component{
          fetch('http://192.168.1.8:8000/api/cartitems/'+this.props.data.email, params)
          .then(response => response.json())
           .then(data => { 
-              this.setState({ cart :data.length })
-              console.log("HRE>>>>> "+this.state.cart)         
+                let arr =[]
+              for(let i =0; i<data.length; i++ ){
+                if(!data[i].orderd){
+                  arr.push(data[i])
+                }
+              }
+              this.setState({ cart :arr.length })
+              this.setState({cartData: arr})
+              console.log("HRE>>>>> "+this.state.cartData)         
              }).catch(function(error) {
               console.log('There has been a problem with your fetch operation: ' + error.message);
               }); 
@@ -163,7 +213,7 @@ export default class  OrderMedicine extends React.Component{
             <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
                  <Button style ={styles.cart}
                         title={"Cart  -  "+(this.state.cart)}
-                        onPress={()=> {this.props.navigation.navigate('Cart') }}
+                        onPress={()=> {this.props.navigation.navigate('Cart', {email: this.props.data.email, token: this.props.data.token}) }}
                          /> 
                 </View>
                 <TextInput 
@@ -199,7 +249,7 @@ export default class  OrderMedicine extends React.Component{
 
                     <Button
                         title="Refil"
-                        onPress={()=> {this.refilHandler()} }
+                        onPress={()=> {this.refilHandler(this.makeid(10),email,items )} }
                          />  
 
                     </React.Fragment>
