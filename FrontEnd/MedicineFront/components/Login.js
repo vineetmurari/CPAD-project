@@ -10,29 +10,6 @@ export default function Login({navigation}) {
   const [token, setToken] = useState('');
   const [user, setUser]= useState({})
 
-
-  // const storeToken = async (value) => {
-  //   try {
-  //     await Storage.setItem({key: 'token', value:value})
-  //   } catch (e) {
-  //     console.log(e)
-  //   }
-  // }
-
-  // const getkeys = async()=>{
-  //   const keys = await Storage.getAllKeys()
-  //   console.log(keys)
-  // }
-
-  // const storeData = async (value) => {
-  //   try {
-  //     const jsonValue = JSON.stringify(value)
-  //     await Storage.setItem({key:'user', value: jsonValue})
-  //   } catch (e) {
-  //     console.log(e)
-  //   }
-  // }
-
   const Singup = async () => {
     const params = {
       method: 'POST',
@@ -65,11 +42,11 @@ export default function Login({navigation}) {
    
    <View style={styles.container}>
 
-      <Text>Online Medicine APP</Text>
+      <Text style={{fontWeight: 'bold', fontSize: 20, padding: 20}}>Online Medicine APP</Text>
 
-      <Text>Login with Email and Password</Text>
+      <Text style={{fontWeight: 'bold', fontSize: 20, padding: 20}}>Login with Email and Password</Text>
 
-      <Text>Enter Email:</Text>
+      <Text style={{fontWeight: 'bold', fontSize: 20, padding: 20}}>Enter Email:</Text>
 
       <TextInput 
       style={styles.input}
@@ -77,7 +54,7 @@ export default function Login({navigation}) {
       onChangeText ={(val)=>setName(val.trim())}/>
       <StatusBar style="auto" />
 
-      <Text>Enter Password:</Text>
+      <Text style={{fontWeight: 'bold', fontSize: 20}}>Enter Password:</Text>
 
       <TextInput 
         style={styles.input}

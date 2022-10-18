@@ -43,10 +43,11 @@ export default class  DashboardView extends React.Component{
         
     render(){
       if (this.state.data===null) {
-        return (<Text>Loading...</Text>)
+        return (<Text style={{fontSize: 50}}>Loading...</Text>)
     }
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              <Text style={{fontWeight:"bold", fontSize: 20}}>Transactions: {"\n"} </Text>
             {this.state.data.length!=0? <View>{
               
               
@@ -56,10 +57,11 @@ export default class  DashboardView extends React.Component{
 
                   <View key={_id}>
 
-                    <Text key={_id}>
+                    <Text  style={{padding: 10, fontWeight:"bold", fontSize: 14}}key={_id}>
 
-                      Transaction : {orderid} {"\n"}
-                      payment : {payment? "Done": "pending"}    
+                      Transaction : {orderid} {"\n"} {"\n"}
+                      Items       : {items[0].item_id} {"\n"} {"\n"}
+                      payment : {payment? "Done": "pending"}  {"\n"} {"\n"}  
                       {"\n"}
                     </Text>
 
