@@ -216,17 +216,19 @@ export default class  OrderMedicine extends React.Component{
                         onPress={()=> {this.props.navigation.navigate('Cart', {email: this.props.data.email, token: this.props.data.token}) }}
                          /> 
                 </View>
-                <TextInput 
+                <View style= {styles.fixToText}>
+                  <TextInput 
                     style={styles.input}
                     placeholder='Search Medicine name'
                     onChangeText ={(val)=>{this.searchHandle(val)}}/> 
 
-                    <Button
-                    style={{width: 2}}
-                        title="Submit"
+                        <TouchableOpacity
+                        style ={styles.refil}
                         onPress={()=> {this.search()} }
-                         />   
-             
+                         >
+                         <Text>Submit</Text> 
+                          </TouchableOpacity> 
+             </View>
              <Text style={{padding:10}}> Transactions :</Text>
 
                 <View>
@@ -239,7 +241,7 @@ export default class  OrderMedicine extends React.Component{
 
               return (
 
-                <View key={_id}>
+                <View key={_id} style={styles.fixToText}>
 
                 <Text  key={_id}>
                    {'    '} Transaction : {orderid} - {items[0].item_id}  {"\n"}
@@ -247,10 +249,12 @@ export default class  OrderMedicine extends React.Component{
                         {"\n"}
                     </Text>
 
-                    <Button
-                        title="Refil"
+                    <TouchableOpacity
+                        style ={styles.refil}
                         onPress={()=> {this.refilHandler(this.makeid(10),email,items )} }
-                         />  
+                         >
+                         <Text>Refil</Text> 
+                          </TouchableOpacity>  
 
                     </View>
 
@@ -265,7 +269,7 @@ export default class  OrderMedicine extends React.Component{
                 </View>
 
                 <SafeAreaView style={styles.container}>
-                 <ScrollView horizontal={false} style={styles.scrollView}>
+                 <ScrollView horizontal={true} style={styles.scrollView}>
 
 
                 {
@@ -294,7 +298,7 @@ export default class  OrderMedicine extends React.Component{
                           title="Add to Cart"
                          color="#FEB557"
                             />
-                          ): (<TouchableOpacity disabled={true}>
+                          ): (<TouchableOpacity style={styles.refil} disabled={true}>
                             <Text> 
                                   Add to Cart - No stock
                            </Text>
@@ -331,7 +335,7 @@ const styles = StyleSheet.create({
         marginBottom:5
       },
     scrollView: {
-      backgroundColor: 'pink',
+      backgroundColor: '#DDDDDD',
       marginHorizontal: 20
     },
     fixToText: {
@@ -343,5 +347,10 @@ const styles = StyleSheet.create({
     },
     cart:{
         height: 1
+    },
+    refil:{
+      margin:10,
+      padding: 10,
+      backgroundColor:  '#DDDDDD'
     }
   });
