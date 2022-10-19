@@ -45,13 +45,14 @@ app.get("/", (req, res) => {
  const medineRoutes = require('./Routes/medicine')
  const orderRoutes = require('./Routes/order')
  const addtocartRoutes = require('./Routes/cart')
+ const FileUploadStatusRoutes = require('./Routes/prescription')
 
 // Use Routes
  app.use("/api", userRoutes);
  app.use("/api",medineRoutes)
  app.use("/api",orderRoutes)
  app.use("/api", addtocartRoutes)
- 
+ app.use("/api", FileUploadStatusRoutes)
 
 // PORT
 const port = process.env.PORT || 8000;

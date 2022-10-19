@@ -7,6 +7,47 @@ var fs = require('fs');
 var path = require('path');
 require('dotenv/config');
 
+const http = require('http');
+
+
+const Data = JSON.stringify({
+    upload_status: true
+  });
+
+  const options = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(Data),
+    },
+  };
+
+  const update_status = (desc) => {
+    let data = '';
+  
+    const request = http.request('http://192.168.1.8:8000/api/updatestatus/'+desc,options, (response) => {
+      response.setEncoding('utf8');
+  
+      response.on('data', (chunk) => {
+        data += chunk;
+      });
+  
+      response.on('end', () => {
+        console.log(data);
+      });
+    });
+  
+    request.on('error', (error) => {
+      console.error(error);
+    });
+  
+    // Write data to the request body
+    request.write(Data);
+  
+    request.end();
+  };
+
+
 mongoose.connect(process.env.MONGO_URL,
     { useNewUrlParser: true, useUnifiedTopology: true }, err => {
         console.log('connected')
@@ -65,6 +106,8 @@ mongoose.connect(process.env.MONGO_URL,
             else {
                 // item.save();
                 res.render('success')
+                console.log(obj.desc)
+                update_status(obj.desc);
             }
         });
     });
