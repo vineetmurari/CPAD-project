@@ -16,7 +16,7 @@ export default class  OrderMedicine extends React.Component{
           orders : null,
           status : "no",
           cart : 0,
-          cartData : null 
+          cartData : null
         };
 
         this.searchHandle = this.searchHandle.bind(this);
@@ -270,15 +270,13 @@ export default class  OrderMedicine extends React.Component{
 
                 <SafeAreaView style={styles.container}>
                  <ScrollView horizontal={true} style={styles.scrollView}>
-
-
+                   
                 {
                     this.state.data.map(
                         
                         (
                             {_id, medicine, mid, prescription, price, stock}
                         ) => {
-
                       return(      
                         <Card key={_id} >
                         
@@ -293,17 +291,31 @@ export default class  OrderMedicine extends React.Component{
                          inColumn={false}>
                         {
                           stock?(
-                            <CardButton
-                         onPress={() => { this.addtocart(this.props.data.email,medicine,"1", price, false )}}
-                          title="Add to Cart"
-                         color="#FEB557"
-                            />
-                          ): (<TouchableOpacity style={styles.refil} disabled={true}>
-                            <Text> 
-                                  Add to Cart - No stock
-                           </Text>
+                            <TouchableOpacity 
+                            style={styles.refil}
+                            onPress={() => { this.addtocart(this.props.data.email,medicine,"1", price, false )}}
+                            >
+                              <Text> 
+                                    Add to Cart
+                              </Text>
+                             </TouchableOpacity>
+                          ): (<TouchableOpacity style={styles.disbutton} disabled={true}>
+                              <Text> 
+                                    Add to Cart
+                              </Text>
                         </TouchableOpacity>)
+                        
                         }  
+
+                            <TouchableOpacity 
+                            style={(prescription)?styles.refil:styles.disbutton}
+                            onPress={() => this.props.navigation.navigate('Prescription', {email: this.props.data.email, token: this.props.data.token}) }
+                            disabled ={!prescription}
+                            >
+                              <Text> 
+                                    Upload Prescription
+                              </Text>
+                             </TouchableOpacity>
                         
                     </CardAction>
                     </Card>         
@@ -349,6 +361,11 @@ const styles = StyleSheet.create({
         height: 1
     },
     refil:{
+      margin:10,
+      padding: 10,
+      backgroundColor:  '#00cc44'
+    },
+    disbutton:{
       margin:10,
       padding: 10,
       backgroundColor:  '#DDDDDD'

@@ -5,6 +5,7 @@ import Login from './components/Login'
 import Dashboard from './components/Dashboard'
 import Cart from './components/Cart'
 import { Button, StyleSheet, Text, TextInput, View, Alert } from 'react-native';
+import Prescription from './components/Prescription'
 
 
 const Stack = createNativeStackNavigator();
@@ -20,6 +21,7 @@ return(
     />
     <Stack.Screen name="Dashboard" component={Dashboard} />
     <Stack.Screen name="Cart" component={Cart} />
+    <Stack.Screen name="Prescription" component={Prescription}/>
   </Stack.Navigator>
 </NavigationContainer>
 )
