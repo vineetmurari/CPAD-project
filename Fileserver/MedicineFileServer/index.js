@@ -64,10 +64,11 @@ mongoose.connect(process.env.MONGO_URL,
             }
             else {
                 // item.save();
-                res.json({msg: "success"})
+                res.render('success')
             }
         });
     });
+
 
     var port = process.env.PORT || '3000'
     app.listen(port, err => {
