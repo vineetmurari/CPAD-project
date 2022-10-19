@@ -9,6 +9,8 @@ export default function Login({navigation}) {
   const [password, setPassword]= useState('initialState')
   const [token, setToken] = useState('');
   const [user, setUser]= useState({})
+  const [authissue, setAuthissue] =useState(false)
+  const [data, setData] = useState({})
 
   const Singup = async () => {
     const params = {
@@ -23,6 +25,7 @@ export default function Login({navigation}) {
       .then(response => response.json())
       .then(data => {
          console.log(data)
+         setData(data)
          if(data.token){
          setToken(data.token)
          setUser(data.user)
@@ -33,6 +36,10 @@ export default function Login({navigation}) {
           email: data.user.email
         })
          }
+         else{
+          setAuthissue(true)
+         }
+
       }).catch(function(error) {
         console.log('There has been a problem with your fetch operation: ' + error.message);
         });
@@ -55,7 +62,7 @@ export default function Login({navigation}) {
       <StatusBar style="auto" />
 
       <Text style={{fontWeight: 'bold', fontSize: 20}}>Enter Password:</Text>
-
+      
       <TextInput 
         style={styles.input}
         placeholder='password'
@@ -64,6 +71,10 @@ export default function Login({navigation}) {
        
 
        <View style={styles.separator} />
+
+        {
+          authissue? <Text style={{fontWeight: 'bold', fontSize: 20, color: 'red', padding: 10}}>{data.error}</Text>: null
+        }
 
        <Button
        title="Submit"

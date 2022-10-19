@@ -228,10 +228,13 @@ getStatus = (name, email)=>{
     search(){
        let dataarr= this.state.data.filter((value)=>{
             let arr = new Array()
-            if(value.medicine===this.state.searchtext){
+            if(value.medicine.includes(this.state.searchtext) || value.medicine.includes(this.state.searchtext.toLowerCase()) ||  value.medicine.includes(this.state.searchtext.toUpperCase()) ){
                 console.log("MATCH..............")
                 return arr.push(value)
             }
+            // else if(value.medicine.includes('')){
+            //   this.setState({data: this.state.prev})
+            // }
         })
         this.setState({data: dataarr})
     }
@@ -335,7 +338,7 @@ getStatus = (name, email)=>{
 
                         <TouchableOpacity
                         style ={styles.refil}
-                        onPress={()=> {this.search()} }
+                        onPress={()=> { this.search()} }
                          >
                          <Text>Submit</Text> 
                           </TouchableOpacity> 
