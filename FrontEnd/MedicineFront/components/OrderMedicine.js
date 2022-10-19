@@ -253,7 +253,7 @@ export default class  OrderMedicine extends React.Component{
                         style ={styles.refil}
                         onPress={()=> {this.refilHandler(this.makeid(10),email,items )} }
                          >
-                         <Text>Refil</Text> 
+                         <Text>Refill</Text> 
                           </TouchableOpacity>  
 
                     </View>
