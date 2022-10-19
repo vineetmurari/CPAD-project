@@ -18,7 +18,8 @@ export default class  OrderMedicine extends React.Component{
           cart : 0,
           cartData : null,
           upload : "no",
-          fileUploaded: false
+          fileUploaded: false,
+          qty: []
         };
 
         this.searchHandle = this.searchHandle.bind(this);
@@ -283,7 +284,8 @@ getStatus = (name, email)=>{
          .then(response => response.json())
           .then(data => { 
               this.setState({ orders :data })
-              console.log("This.............."+this.state.orders)         
+              console.log("This.............."+this.state.orders)
+             
              }).catch(function(error) {
               console.log('There has been a problem with your fetch operation: ' + error.message);
               }); 
@@ -306,7 +308,9 @@ getStatus = (name, email)=>{
                         .then(response => response.json())
                          .then(data => {
                             console.log(data)
-                             this.setState({ data :data })           
+                             this.setState({ data :data }) 
+                             let arr = new Array(data.length).fill(1)
+                             this.setState({qty:arr})          
                             }).catch(function(error) {
                              console.log('There has been a problem with your fetch operation: ' + error.message);
                              });                
@@ -389,7 +393,7 @@ getStatus = (name, email)=>{
                     this.state.data.map(
                         
                         (
-                            {_id, medicine, mid, prescription, price, stock}
+                            {_id, medicine, mid, prescription, price, stock}, index
                         ) => {
                       return(      
                         <Card key={_id} >
@@ -400,6 +404,7 @@ getStatus = (name, email)=>{
                          <CardContent text={ 'Doctor Prescription Needed : '+(prescription?"Yes":"No")} />
                          <CardContent text={'$'+price} />
                          <CardContent text={'In stock '+(stock?"Yes":"No")} />
+                         <CardContent text ={"Qty - "+ this.state.qty[index]}/>
                          <CardAction 
                          separator={false} 
                          inColumn={false}>
@@ -410,12 +415,12 @@ getStatus = (name, email)=>{
                             onPress={() => { this.AddItemstoCart(this.props.data.email,medicine,"1", price, false, prescription )}}
                             >
                               <Text> 
-                                    Add to Cart
+                                    Add
                               </Text>
                              </TouchableOpacity>
                           ): (<TouchableOpacity style={styles.disbutton} disabled={true}>
                               <Text> 
-                                    Add to Cart
+                                    Add
                               </Text>
                         </TouchableOpacity>)
                         
@@ -427,10 +432,34 @@ getStatus = (name, email)=>{
                             disabled ={!prescription}
                             >
                               <Text> 
-                                    Upload Prescription
+                                    Upload prescription
                               </Text>
                              </TouchableOpacity>
-                        
+
+                             <TouchableOpacity 
+                            style={styles.refil}
+                            onPress={() => {
+                              const newarr = this.state.qty.slice() 
+                              newarr[index] =  this.state.qty[index]+1
+                              this.setState({qty: newarr}) 
+                            } }
+                            >
+                              <Text> 
+                                    +
+                              </Text>
+                             </TouchableOpacity>
+
+                             <TouchableOpacity 
+                            style={styles.refil}
+                            onPress={() => {  
+                              const newarr = this.state.qty.slice() 
+                              newarr[index] =  newarr[index]!=0?this.state.qty[index]-1 :  newarr[index]
+                              this.setState({qty: newarr}) } }
+                            >
+                              <Text> 
+                                    -
+                              </Text>
+                             </TouchableOpacity>
                     </CardAction>
                     </Card>         
                 );
