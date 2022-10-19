@@ -4,8 +4,7 @@ exports.poststatus = async (req, res, next)=>{
 
     
     let status = await  Prescription.find({email: req.params.id,item_name: req.params.name})
-
-    if(!status){
+    if(status.length===0){
     const status = new Prescription(req.body)
 
     status.save((err, status)=>{

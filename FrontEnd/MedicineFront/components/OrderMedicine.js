@@ -16,7 +16,9 @@ export default class  OrderMedicine extends React.Component{
           orders : null,
           status : "no",
           cart : 0,
-          cartData : null
+          cartData : null,
+          upload : "no",
+          fileUploaded: false
         };
 
         this.searchHandle = this.searchHandle.bind(this);
@@ -28,6 +30,10 @@ export default class  OrderMedicine extends React.Component{
         this.refilHandler =this.refilHandler.bind(this)
         this.placeOrder =this.placeOrder.bind(this)
         this.makeid = this.makeid.bind(this)
+        this.Poststatus = this.Poststatus.bind(this)
+        this.getStatus = this.getStatus.bind(this)
+        this.updatestatus = this.updatestatus.bind(this)
+        this.AddItemstoCart = this.AddItemstoCart.bind(this)
       }
       
       componentDidMount() {
@@ -89,7 +95,98 @@ export default class  OrderMedicine extends React.Component{
     refilHandler(orderid, email, items){
           this.placeOrder(orderid, email, items)
     }
-    
+
+
+    Poststatus = (name, email)=>{
+
+      const params = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache'
+         },
+        body: JSON.stringify({
+          'email': email,
+          'item_name': name,
+          'upload_status': false
+      }),};
+
+      fetch('http://192.168.1.8:8000/api/poststatus/'+name+'/'+email, params)
+      .then(response => response.json())
+      .then(data => {
+        console.log('Post status data '+JSON.stringify(data))
+      }).catch(function(error) {
+        console.log('There has been a problem with your fetch operation: ' + error.message);
+        });
+
+}
+
+
+getStatus = (name, email)=>{
+  const params = {
+    method: 'GET',
+    headers: {'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache'
+     },
+    };
+    fetch('http://192.168.1.8:8000/api/getstatus/'+name+'/'+email, params)
+  .then(response => response.json())
+  .then(data => {
+    console.log("get status "+ JSON.stringify(data) )
+    if(!data.upload_status){
+        this.setState({fileUploaded: true})
+    }
+  }).catch(function(error) {
+    console.log('There has been a problem with your fetch operation: ' + error.message);
+    });
+
+ }
+
+
+ updatestatus =(email)=>{
+  const params = {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache'
+     },
+    body: JSON.stringify({
+      'upload_status': false
+  }),};
+
+  fetch('http://192.168.1.8:8000/api/updatestatus/'+email, params)
+  .then(response => response.json())
+  .then(data => {
+    console.log("update status"+ JSON.stringify(data))
+  }).catch(function(error) {
+    console.log('There has been a problem with your fetch operation: ' + error.message);
+    });
+ }
+
+
+    AddItemstoCart =(email, item_name, qty, price, orderd, prescription)=>{
+
+      if(prescription)
+      {
+      Promise.all([
+        this.getStatus(item_name, email)
+      ]).then(([res1]) => {
+       
+        if(this.state.fileUploaded){
+          this.addtocart(email, item_name, qty, price, orderd)
+        }
+        else{
+          return Alert.alert("Please upload the prescription before adding item to cart")
+        }
+      }) 
+
+    }
+    else{
+      this.addtocart(email, item_name, qty, price, orderd)
+    }
+
+    }
+
+
+
     addtocart=(email, item_name, qty, price, orderd)=>{
         const params = {
             method: 'POST',
@@ -112,6 +209,20 @@ export default class  OrderMedicine extends React.Component{
             }).catch(function(error) {
               console.log('There has been a problem with your fetch operation: ' + error.message);
               });
+    }
+
+
+    uploadPrescription = (name, email)=>{
+
+      Promise.all([
+        this.Poststatus(name, email),
+        this.updatestatus(email)
+      ]).then(([res1, res2]) => {
+        this.setState({upload: "fetched"})
+        this.props.navigation.navigate('Prescription', {email: this.props.data.email, token: this.props.data.token})
+      })
+
+
     }
 
     search(){
@@ -293,7 +404,7 @@ export default class  OrderMedicine extends React.Component{
                           stock?(
                             <TouchableOpacity 
                             style={styles.refil}
-                            onPress={() => { this.addtocart(this.props.data.email,medicine,"1", price, false )}}
+                            onPress={() => { this.AddItemstoCart(this.props.data.email,medicine,"1", price, false, prescription )}}
                             >
                               <Text> 
                                     Add to Cart
@@ -309,7 +420,7 @@ export default class  OrderMedicine extends React.Component{
 
                             <TouchableOpacity 
                             style={(prescription)?styles.refil:styles.disbutton}
-                            onPress={() => this.props.navigation.navigate('Prescription', {email: this.props.data.email, token: this.props.data.token}) }
+                            onPress={() => {this.uploadPrescription(medicine, this.props.data.email )} }
                             disabled ={!prescription}
                             >
                               <Text> 
@@ -363,7 +474,7 @@ const styles = StyleSheet.create({
     refil:{
       margin:10,
       padding: 10,
-      backgroundColor:  '#00cc44'
+      backgroundColor:  '#558BF6'
     },
     disbutton:{
       margin:10,

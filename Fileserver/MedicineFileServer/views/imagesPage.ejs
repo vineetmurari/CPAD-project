@@ -12,51 +12,49 @@
 	<hr>
 	<div>
 		<form action="/" method="POST" enctype="multipart/form-data">
-			<div>
-				<label for="name">Title</label>
+			<div style="padding: 30px; margin: 30px; border: 10px;">
+				<label for="name">Title :</label>
 				<input type="text" id="name" placeholder="Name"
 					value="" name="name" required>
 			</div>
-			<div>
-				<label for="desc">email</label>
+			<div style="padding: 30px; margin: 30px; border: 10px;">
+				<label for="desc">email :</label>
 				<input id="desc" name="desc" value="" rows="2"
 						placeholder="email" required>
 				</input>
 			</div>
-			<div>
-				<label for="image">Upload</label>
-				<input type="file" id="image"
+			<div style="padding: 30px; margin: 30px; border: 10px;">
+				<label style="padding-bottom: 5px;" for="image">Upload :</label>
+				<input
+				
+				style="font-weight: bold;
+				color: dodgerblue;
+				padding: 0.5em;
+				border: thin solid grey;
+				border-radius: 3px;"
+				
+				type="file" id="image"
 					name="image" value="" required>
 			</div>
-			<div>
-				<button type="submit">Submit</button>
+			<div style="padding: 30px; margin: 30px; border: 10px;">
+				<button 
+				style=" background-color: #558BF6;
+				border: none;
+				color: white;
+				padding: 15px 32px;
+				text-align: center;
+				text-decoration: none;
+				display: inline-block;
+				font-size: 16px;
+				margin: 4px 2px;
+				cursor: pointer;"
+				
+				type="submit">Submit</button>
 			</div>
 		</form>
 	</div>
 
 	<hr>
-
-	<h1>Uploaded Images</h1>
-	<div>
-		<% items.forEach(function(image) { %>
-		<div>
-			<div>
-				<img src="data:image/<%=image.img.contentType%>;base64,
-					<%=image.img.data.toString('base64')%>">
-				<div>
-					<h5><%= image.name %></h5>
-					
-
-
-<p><%= image.desc %></p>
-
-
-
-				</div>
-			</div>
-		</div>
-		<% }) %>
-	</div>
 </body>
 
 </html>
