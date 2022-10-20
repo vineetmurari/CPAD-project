@@ -347,7 +347,7 @@ getStatus = (name, email)=>{
                          <Text>Submit</Text> 
                           </TouchableOpacity> 
              </View>
-             <Text style={{padding:10}}> Transactions :</Text>
+             {JSON.stringify(this.state.orders).length!=2?<Text style={{padding:10}}> Transactions :</Text> : <Text style={{padding:10}}> No Transcations Found!</Text>}
 
                 <View>
 
